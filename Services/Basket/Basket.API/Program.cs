@@ -1,9 +1,8 @@
 using System.Reflection;
-using Catalog.Application.Handlers;
-using Catalog.Application.Mappers;
-using Catalog.Core.Repositories;
-using Catalog.Infrastructure.Data;
-using Catalog.Infrastructure.Repositories;
+using Basket.Application.Handlers;
+using Basket.Application.Mappers;
+using Basket.Core.Repositories;
+using Basket.Infrastructure.Repositories;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -18,25 +17,29 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c=>
     c.SwaggerDoc("v1",
-    new OpenApiInfo
-    {
-        Title = "Catalog.API",
-        Version = "v1"
-    }
+        new OpenApiInfo
+        {
+            Title = "Basket.API",
+            Version = "v1"
+        }
     ));
 builder.Services.AddApiVersioning();
-builder.Services.AddHealthChecks()
-    .AddMongoDb(builder.
-            Configuration["DatabaseSettings:ConnectionString"], 
-        "Catalog Mongo Db Health Check",HealthStatus.Degraded);
-builder.Services.AddAutoMapper(typeof(ProductMappingProfile));
+//Redis Settings
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration["CacheSettings:ConnectionString"];
+});
+
 builder.Services.AddMediatR(cfg=>
-    cfg.RegisterServicesFromAssemblies(typeof(CreateProductHandler)
+    cfg.RegisterServicesFromAssemblies(typeof(CreateShoppingCartCommandHandler)
         .GetTypeInfo().Assembly));
-builder.Services.AddScoped<ICatalogContext, CatalogContext>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IBrandRepository, ProductRepository>();
-builder.Services.AddScoped<ITypesRepository, ProductRepository>();
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+builder.Services.AddAutoMapper(typeof(BasketMappingProfile));
+builder.Services.AddHealthChecks()
+    .AddRedis(builder.
+            Configuration["CacheSettings:ConnectionString"], 
+        "Redis Health",HealthStatus.Degraded);
+
 
 var app = builder.Build();
 
@@ -45,12 +48,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c=>
-        c.SwaggerEndpoint("/swagger/v1/swagger.json","Catalog.API v1"));
+        c.SwaggerEndpoint("/swagger/v1/swagger.json","Basket.API v1"));
     app.UseDeveloperExceptionPage();
 }
 
 app.UseRouting();
 app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
