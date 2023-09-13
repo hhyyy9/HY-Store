@@ -9,6 +9,9 @@ services:
   discountdb:
     image: postgres
     
+  orderdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest #mcr.microsoft.com/azure-sql-edge 
+    
   pgadmin:
     image: dpage/pgadmin4
     
@@ -33,9 +36,16 @@ services:
       context: .
       dockerfile: Services/Discount/Discount.API/Dockerfile
 
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}orderingapi
+    build:
+      context: .
+      dockerfile: Services/Ordering/Ordering.API/Dockerfile
+      
 volumes:
   mongo_data:
   portainer_data:
   postgres_data:
   pgadmin_data:
+  mssql_data:
     

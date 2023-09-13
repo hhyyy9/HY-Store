@@ -1,5 +1,4 @@
 using Grpc.Core;
-using Discount.API;
 using Discount.Application.Commands;
 using Discount.Application.Queries;
 using Discount.Grpc.Protos;
