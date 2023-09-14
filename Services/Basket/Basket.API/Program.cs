@@ -4,6 +4,8 @@ using Basket.Application.Mappers;
 using Basket.Core.Repositories;
 using Basket.Infrastructure.Repositories;
 using HealthChecks.UI.Client;
+using MassTransit;
+using MassTransit.MultiBus;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
@@ -39,6 +41,14 @@ builder.Services.AddHealthChecks()
     .AddRedis(builder.
             Configuration["CacheSettings:ConnectionString"], 
         "Redis Health",HealthStatus.Degraded);
+builder.Services.AddMassTransit(config =>
+{
+    config.UsingRabbitMq((ctx, cfg) =>
+    {
+        cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
+    });
+});
+builder.Services.AddMassTransitHostedService();
 
 
 var app = builder.Build();
