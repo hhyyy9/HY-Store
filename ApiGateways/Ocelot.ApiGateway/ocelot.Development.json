@@ -109,10 +109,10 @@
         }
       ],
       "UpstreamPathTemplate": "/Basket/CreateBasket",
-      "UpstreamHttpMethod": [ "POST" ]
-      //      "AuthenticationOptions": {
-      //        "AuthenticationProviderKey": "EShoppingGatewayAuthScheme"
-      //      }
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "HYStoreGatewayAuthScheme"
+      }
     },
     {
       "DownstreamPathTemplate": "/api/v1/Basket/Checkout",
@@ -192,6 +192,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:9010"
+    "BaseUrl": "http://host.docker.internal:9010"
   }
 }

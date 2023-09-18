@@ -6,15 +6,18 @@ using Basket.Infrastructure.Repositories;
 using HealthChecks.UI.Client;
 using MassTransit;
 using MassTransit.MultiBus;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c=>
@@ -32,9 +35,11 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = builder.Configuration["CacheSettings:ConnectionString"];
 });
 
-builder.Services.AddMediatR(cfg=>
-    cfg.RegisterServicesFromAssemblies(typeof(CreateShoppingCartCommandHandler)
-        .GetTypeInfo().Assembly));
+//builder.Services.AddMediatR(cfg=>
+//    cfg.RegisterServicesFromAssemblies(typeof(CreateShoppingCartCommandHandler)
+//        .GetTypeInfo().Assembly));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 builder.Services.AddAutoMapper(typeof(BasketMappingProfile));
 builder.Services.AddHealthChecks()
@@ -49,6 +54,24 @@ builder.Services.AddMassTransit(config =>
     });
 });
 builder.Services.AddMassTransitHostedService();
+
+//Identity Server changes
+var userPolicy = new AuthorizationPolicyBuilder()
+    .RequireAuthenticatedUser()
+    .Build();
+builder.Services.AddControllers(config =>
+{
+    config.Filters.Add(new AuthorizeFilter(userPolicy));
+});
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = "https://localhost:9009";
+        options.Audience = "Basket";
+        var handler = new HttpClientHandler();
+        handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
+        options.BackchannelHttpHandler = handler;
+    });
 
 
 var app = builder.Build();
@@ -66,7 +89,7 @@ app.UseRouting();
 app.UseStaticFiles();
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {

@@ -7,6 +7,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{58E5590C-4935-411B-9076-F1EA6675838B}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
+		docker-compose.override.yml = docker-compose.override.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.API", "Services\Catalog\Catalog.API\Catalog.API.csproj", "{4E0EBC6E-1013-412F-B32B-CE82A9C5C8B5}"
@@ -55,6 +56,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateways", "ApiGateways"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocelot.ApiGateway", "ApiGateways\Ocelot.ApiGateway\Ocelot.ApiGateway.csproj", "{B8D85101-9A1A-47F1-8D51-2F4F26A5F07D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HYStore.Identity", "Infrastructure\HYStore.Identity\HYStore.Identity.csproj", "{B7E5D6B4-D2D1-40F5-85CA-C0E632AB8560}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +86,7 @@ Global
 		{670155FD-0B04-443E-AB70-3E2E37F2DE74} = {803025BF-55F1-49FC-B0C2-AEA0E569F786}
 		{75BCFAD4-C282-4C05-836D-92A9F0B3A6E5} = {F85725A7-1308-4DF5-B4C5-CA693BE10AFE}
 		{B8D85101-9A1A-47F1-8D51-2F4F26A5F07D} = {884B7C75-4004-48E1-A027-E920C0FE979B}
+		{B7E5D6B4-D2D1-40F5-85CA-C0E632AB8560} = {F85725A7-1308-4DF5-B4C5-CA693BE10AFE}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{4E0EBC6E-1013-412F-B32B-CE82A9C5C8B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -157,5 +161,9 @@ Global
 		{B8D85101-9A1A-47F1-8D51-2F4F26A5F07D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8D85101-9A1A-47F1-8D51-2F4F26A5F07D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8D85101-9A1A-47F1-8D51-2F4F26A5F07D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7E5D6B4-D2D1-40F5-85CA-C0E632AB8560}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7E5D6B4-D2D1-40F5-85CA-C0E632AB8560}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7E5D6B4-D2D1-40F5-85CA-C0E632AB8560}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7E5D6B4-D2D1-40F5-85CA-C0E632AB8560}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
